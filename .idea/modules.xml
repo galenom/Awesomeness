@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/AwesomenessNomination.iml" filepath="$PROJECT_DIR$/AwesomenessNomination.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AwesomenessNomination_main.iml" filepath="$PROJECT_DIR$/.idea/modules/AwesomenessNomination_main.iml" group="AwesomenessNomination" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AwesomenessNomination_test.iml" filepath="$PROJECT_DIR$/.idea/modules/AwesomenessNomination_test.iml" group="AwesomenessNomination" />
+    </modules>
+  </component>
+</project>

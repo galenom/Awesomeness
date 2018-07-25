@@ -2,6 +2,7 @@ package com.solstice.employee.Employee.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Data

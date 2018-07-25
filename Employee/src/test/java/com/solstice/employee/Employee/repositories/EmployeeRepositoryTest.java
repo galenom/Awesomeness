@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
@@ -31,7 +32,7 @@ public class EmployeeRepositoryTest {
     public void findEmployeeThatDoesNotExistById(){
         repository.save(getMockedEmployee());
         EmployeeEntity employee = repository.findEmployeeByEmployeeNumber(21L);
-        assertEquals(employee, null);
+        assertNull(employee);
     }
 
     private List<EmployeeEntity> getMockedEmployee() {

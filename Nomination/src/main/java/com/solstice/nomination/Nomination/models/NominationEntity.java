@@ -5,9 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -23,8 +22,25 @@ public class NominationEntity {
     Long nominatorId;
     Long nomineeId;
     @CreatedDate
-    private Date date;
-    private List<SolsticePrincipals> principals;
+    private String date;
+    @ElementCollection
+    @JoinTable(name = "tblPrincipals", joinColumns = @JoinColumn(name = "nomineeId"))
+    @Column(name = "principal", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Collection<SolsticePrincipals> principals;
     private String description;
+
+
+    @Override
+    public boolean equals(Object o){
+        if(o == this){
+            return true;
+        }
+        if(o instanceof NominationEntity && ((NominationEntity)o).id == this.id){
+            return true;
+        }
+        return false;
+
+    }
 
 }

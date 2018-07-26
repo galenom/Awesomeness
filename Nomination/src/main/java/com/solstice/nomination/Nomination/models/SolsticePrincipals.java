@@ -1,6 +1,8 @@
 package com.solstice.nomination.Nomination.models;
 
-enum SolsticePrincipals {
+
+
+public enum SolsticePrincipals {
     SERVANT_LEADERSHIP,
     CATCH_EXCELLENCE,
     PRACTICE_EMPATHY,

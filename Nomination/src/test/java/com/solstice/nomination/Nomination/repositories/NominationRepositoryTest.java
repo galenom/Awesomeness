@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.text.ParseException;
@@ -19,10 +20,9 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class NominationRepositoryTest {
 
-    //getAllNominationsByWeek
-    //getAllNominationsByDateRange
     //postNewNominationForEmployee
 
     @Autowired
@@ -46,6 +46,20 @@ public class NominationRepositoryTest {
                 new NominationEntity(4L,2L,3L,"07/25/2018",principals,"Mario is the best employee3")
         );
         assertEquals(nominations,expectedList);
+    }
+
+    @Test
+    public void getAllNominationsByDateRangeTest() {
+        List<NominationEntity> nominations = repository.findAllByDateBetween("06/26/2018", "07/25/2018");
+        List<SolsticePrincipals> principals = Arrays.asList(SolsticePrincipals.CATCH_EXCELLENCE);
+
+        List<NominationEntity> expectedList = Arrays.asList(
+                new NominationEntity(4L,2L,3L,"07/25/2018",principals,"Mario is the best employee3"),
+                new NominationEntity(5L,2L,5L,"07/22/2018",principals,"Mario is the best employee3"),
+                new NominationEntity(6L,2L,4L,"06/26/2018",principals,"Mario is the best employee3")
+        );
+
+        assertEquals(nominations, expectedList);
     }
 
 

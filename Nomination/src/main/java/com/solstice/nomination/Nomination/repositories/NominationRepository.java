@@ -11,4 +11,6 @@ public interface NominationRepository extends CrudRepository<NominationEntity, L
 
 
     List<NominationEntity> findAllByNomineeId(Long id);
+
+    List<NominationEntity> findAllByDateBetween(String startDate, String endDate);
 }

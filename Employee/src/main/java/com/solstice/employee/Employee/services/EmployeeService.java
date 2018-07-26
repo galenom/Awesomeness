@@ -5,7 +5,9 @@ import com.solstice.employee.Employee.models.EmployeeEntity;
 import com.solstice.employee.Employee.repositories.EmployeeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 @AllArgsConstructor
 public class EmployeeService {
 

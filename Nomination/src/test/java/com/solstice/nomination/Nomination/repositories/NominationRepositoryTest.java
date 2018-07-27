@@ -64,7 +64,6 @@ public class NominationRepositoryTest {
 
 
     private List<NominationEntity> getMockNominations(){
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         List<SolsticePrincipals> principals = Arrays.asList(SolsticePrincipals.CATCH_EXCELLENCE);
         return Arrays.asList(
                 new NominationEntity(1L,2L,3L,"12/21/2012",principals,"Mario is the best employee1"),

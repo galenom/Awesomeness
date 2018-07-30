@@ -1,22 +1,30 @@
 package com.solstice.nomination.Nomination.services;
 
-import com.solstice.nomination.Nomination.models.Nomination;
-import com.solstice.nomination.Nomination.models.NominationEntity;
-import com.solstice.nomination.Nomination.models.SolsticePrincipals;
+import com.solstice.nomination.Nomination.models.*;
 import com.solstice.nomination.Nomination.repositories.NominationRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class NominationService {
 
-    @Autowired
     NominationRepository repository;
+    EmployeeClient employeeClient;
+
+    @Autowired
+    public NominationService(NominationRepository repository ,EmployeeClient employeeClient){
+        this.employeeClient = employeeClient;
+        this.repository = repository;
+    }
 
     public List<Nomination> getAllNominationsForEmployee(Long id){
         List<NominationEntity> nominationEntities = repository.findAllByNomineeId(id);
@@ -38,18 +46,28 @@ public class NominationService {
 
     }
 
+    //TODO TEST NOMINATION SERVICE
     private List<Nomination> convertEntityListToNominationList(List<NominationEntity> nominationEntities){
         List<Nomination> nominations = new ArrayList<Nomination>();
         for(NominationEntity entity : nominationEntities){
-
+            Nomination nomination = convertEntityToNomination(entity);
+            nominations.add(nomination);
         }
         return nominations;
     }
 
     private Nomination convertEntityToNomination(NominationEntity entity){
-        // TODO here we have to make rest calls to Employee to get Employee objects by their ID and such
-        // TODO Ask Justin how we should go about doing this because we have noooooo idea...mario has an idea but kunal does not
-        return null;
+        Employee nominee = employeeClient.getEmployeeById(entity.getNomineeId());
+        Employee nominator = employeeClient.getEmployeeById(entity.getNominatorId());
+        Collection<SolsticePrincipals> principals = entity.getPrincipals();
+        Date date= null;
+        try {
+            date = new SimpleDateFormat("mm/dd/yyyy").parse(entity.getDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String description = entity.getDescription();
+        return new Nomination(nominator,nominee,date,(List)principals,description);
     }
 
 

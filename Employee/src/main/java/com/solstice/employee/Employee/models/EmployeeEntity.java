@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Data
-@Entity
+@Entity(name = "Employees")
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeEntity {

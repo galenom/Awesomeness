@@ -1,0 +1,1 @@
+insert into employees(employee_number, first_name, last_name, office, title, email, image_url) values (1, "Mario", "Galeno", "111", "Technical Analyst", "mgaleno@solstice.com", "google.com");

@@ -60,12 +60,7 @@ public class NominationService {
         Employee nominee = employeeClient.getEmployeeById(entity.getNomineeId());
         Employee nominator = employeeClient.getEmployeeById(entity.getNominatorId());
         Collection<SolsticePrincipals> principals = entity.getPrincipals();
-        Date date= null;
-        try {
-            date = new SimpleDateFormat("mm/dd/yyyy").parse(entity.getDate());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        Date date = entity.getDate();
         String description = entity.getDescription();
         return new Nomination(nominator,nominee,date,(List)principals,description);
     }

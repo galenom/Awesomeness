@@ -22,7 +22,7 @@ public class NominationEntity {
     Long nominatorId;
     Long nomineeId;
     @CreatedDate
-    private String date;
+    private Date date;
     @ElementCollection
     @JoinTable(name = "tblPrincipals", joinColumns = @JoinColumn(name = "nomineeId"))
     @Column(name = "principal", nullable = false)

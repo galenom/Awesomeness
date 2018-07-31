@@ -9,10 +9,7 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class NominationService {
@@ -34,19 +31,35 @@ public class NominationService {
         return convertEntityListToNominationList(nominationEntities);
     }
 
-    public List<Nomination> getAllNominationByDateBetween(String startDate, String endDate ){
-        return null;
+    public List<Nomination> getAllNominationByDateBetween(Date startDate, Date endDate ) {
+        List<NominationEntity> nominationEntities = repository.findAllByDateBetween(startDate,endDate);
+        if(nominationEntities.isEmpty()){
+            return null;
+        }
+        return convertEntityListToNominationList(nominationEntities);
     }
 
-    public List<Nomination> getAllNominationForWeekOf(String date){
-        return null;
+    public List<Nomination> getAllNominationForWeekOf(Date currentDate){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.DATE,-7);
+
+        Date startDate = calendar.getTime();
+
+        List<NominationEntity> nominationEntities = repository.findAllByDateBetween(startDate,currentDate);
+        if(nominationEntities.isEmpty()){
+            return null;
+        }
+        return convertEntityListToNominationList(nominationEntities);
     }
 
-    public void createNomination(String nominatorId, String nomineeId, List<SolsticePrincipals> principals, String description){
 
+    // TODO Set these up into the controller, write tests for the controller, and then test the controller via url calls
+    public void createNomination(Long nominatorId, Long nomineeId, List<SolsticePrincipals> principals, String description){
+        NominationEntity nominationEntity = new NominationEntity(nominatorId,nomineeId, new Date(), principals, description);
+        repository.save(nominationEntity);
     }
 
-    //TODO TEST NOMINATION SERVICE
     private List<Nomination> convertEntityListToNominationList(List<NominationEntity> nominationEntities){
         List<Nomination> nominations = new ArrayList<Nomination>();
         for(NominationEntity entity : nominationEntities){

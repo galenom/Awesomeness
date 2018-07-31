@@ -30,6 +30,13 @@ public class NominationEntity {
     private Collection<SolsticePrincipals> principals;
     private String description;
 
+    public NominationEntity(Long nominatorId, Long nomineeId, Date date, Collection<SolsticePrincipals> principals, String description) {
+        this.nominatorId = nominatorId;
+        this.nomineeId = nomineeId;
+        this.date = date;
+        this.principals = principals;
+        this.description = description;
+    }
 
     @Override
     public boolean equals(Object o){

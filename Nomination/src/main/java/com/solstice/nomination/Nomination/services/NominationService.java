@@ -21,7 +21,7 @@ public class NominationService {
     EmployeeClient employeeClient;
 
     @Autowired
-    public NominationService(NominationRepository repository ,EmployeeClient employeeClient){
+    public NominationService(NominationRepository repository, EmployeeClient employeeClient){
         this.employeeClient = employeeClient;
         this.repository = repository;
     }
@@ -31,7 +31,7 @@ public class NominationService {
         if(nominationEntities.isEmpty()){
             return null;
         }
-        return null;
+        return convertEntityListToNominationList(nominationEntities);
     }
 
     public List<Nomination> getAllNominationByDateBetween(String startDate, String endDate ){

@@ -25,8 +25,6 @@ import static org.junit.Assert.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class NominationRepositoryTest {
 
-    //postNewNominationForEmployee
-
     @Autowired
     private NominationRepository repository;
     private List<NominationEntity> nominations;

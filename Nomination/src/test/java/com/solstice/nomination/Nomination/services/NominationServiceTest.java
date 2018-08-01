@@ -9,6 +9,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.text.DateFormat;
@@ -19,12 +22,14 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringRunner.class)
+@DataJpaTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class NominationServiceTest {
 
-    @Mock
+    @Autowired
     NominationRepository repository;
 
     @Mock
@@ -32,60 +37,71 @@ public class NominationServiceTest {
 
     NominationService nominationService;
 
-    List<NominationEntity> nominations;
+    private List<NominationEntity> nominationEntities;
 
     @Before
     public void setUp(){
         this.nominationService = new NominationService(repository, employeeClient);
+
+        nominationEntities = getMockNominations();
+        repository.save(nominationEntities);
     }
 
     @Test
     public void getAllNominationsForEmployeeTest(){
-        List<SolsticePrincipals> principals = Arrays.asList(SolsticePrincipals.CATCH_EXCELLENCE);
-        when(repository.findAllByNomineeId(3L)).thenReturn(Arrays.asList(
-                new NominationEntity(1L,2L,3L, dateHelper("12/21/2012"), principals,"Mario is the best employee1"),
-                new NominationEntity(2L,2L,3L, dateHelper("12/21/2012"), principals,"Mario is the best employee2"),
-                new NominationEntity(3L,2L,3L, dateHelper("07/26/2018"), principals,"Mario is the best employee3")
-                ));
-
          List<Nomination> nominations = nominationService.getAllNominationsForEmployee(3L);
-         assertEquals(nominations.size(),3);
+         assertEquals(nominations.size(),4);
     }
 
+    @Test
     public void getAllNominationsForEmployeeReturnsEmptyTest(){
-        when(repository.findAllByNomineeId(3L)).thenReturn(Arrays.asList(
-        ));
-
-        List<Nomination> nominations = nominationService.getAllNominationsForEmployee(3L);
+        List<Nomination> nominations = nominationService.getAllNominationsForEmployee(0L);
         assertNull(nominations);
     }
 
-    // TODO Do we need further testing because all we are doing is making a call to Repository and then converting entitiy to pojo
     @Test
     public void getAllNominationsByDateBetweenEmptyTest(){
-        when(repository.findAllByDateBetween(new Date(), new Date())).thenReturn(Arrays.asList(
-        ));
-
         List<Nomination> nominations = nominationService.getAllNominationByDateBetween(new Date(), new Date());
         assertNull(nominations);
     }
 
 
-    // TODO How do we test the complex logic with the calendar and date?
     @Test
     public void getAllNominationsForWeekOfTest(){
-
+        List<Nomination> nominations = nominationService.getAllNominationForWeekOf(dateHelper("07/26/2018"));
+        assertEquals(nominations.size(), 3);
     }
 
-    // TODO How do we test this ?
     @Test
     public void createNominationTest(){
+        List<SolsticePrincipals> principals = Arrays.asList(SolsticePrincipals.CATCH_EXCELLENCE);
 
+        nominationService.createNomination(2L, 1L, principals, "This is a new nomination");
+
+        List<Nomination> fetchedNominations = nominationService.getAllNominationsForEmployee(1L);
+
+        if (fetchedNominations.isEmpty()) {
+            fail();
+        }
+
+        assertEquals(fetchedNominations.get(0).getDescription(), "This is a new nomination");
+    }
+
+    private List<NominationEntity> getMockNominations(){
+        List<SolsticePrincipals> principals = Arrays.asList(SolsticePrincipals.CATCH_EXCELLENCE);
+        return Arrays.asList(
+                new NominationEntity(1L,2L,3L, dateHelper("12/21/2012"), principals,"Mario is the best employee1"),
+                new NominationEntity(2L,2L,3L, dateHelper("12/21/2012"), principals,"Mario is the best employee2"),
+                new NominationEntity(3L,2L,3L, dateHelper("07/26/2018"), principals,"Mario is the best employee3"),
+                new NominationEntity(4L,2L,3L, dateHelper("07/25/2018"), principals,"Mario is the best employee3"),
+                new NominationEntity(5L,2L,5L, dateHelper("07/22/2018"), principals,"Mario is the best employee3"),
+                new NominationEntity(6L,2L,4L, dateHelper("06/26/2018"), principals,"Mario is the best employee3")
+        );
     }
 
     private Date dateHelper(String dateStr) {
         DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-        Date date = null;
+        Date date;
         try {
             date = format.parse(dateStr);
         } catch (Exception e) {

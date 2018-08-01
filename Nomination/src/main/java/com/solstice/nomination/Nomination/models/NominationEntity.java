@@ -13,7 +13,6 @@ import java.util.List;
 @Data
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor
 public class NominationEntity {
 
     @Id

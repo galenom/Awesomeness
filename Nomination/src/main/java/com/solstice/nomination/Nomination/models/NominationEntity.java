@@ -37,6 +37,14 @@ public class NominationEntity {
         this.description = description;
     }
 
+    public NominationEntity(Nomination nomination) {
+        this.nominatorId = nomination.getNominatedByEmployee().getEmployeeNumber();
+        this.nomineeId = nomination.getNominatedEmployee().getEmployeeNumber();
+        this.date = nomination.getDate();
+        this.principals = nomination.getPrincipals();
+        this.description = nomination.getDescription();
+    }
+
     @Override
     public boolean equals(Object o){
         if(o == this){

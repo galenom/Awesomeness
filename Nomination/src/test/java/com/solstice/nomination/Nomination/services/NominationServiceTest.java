@@ -1,9 +1,6 @@
 package com.solstice.nomination.Nomination.services;
 
-import com.solstice.nomination.Nomination.models.EmployeeClient;
-import com.solstice.nomination.Nomination.models.Nomination;
-import com.solstice.nomination.Nomination.models.NominationEntity;
-import com.solstice.nomination.Nomination.models.SolsticePrincipals;
+import com.solstice.nomination.Nomination.models.*;
 import com.solstice.nomination.Nomination.repositories.NominationRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +21,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -74,18 +73,31 @@ public class NominationServiceTest {
 
     @Test
     public void createNominationTest(){
+
         List<SolsticePrincipals> principals = Arrays.asList(SolsticePrincipals.CATCH_EXCELLENCE);
 
-        nominationService.createNomination(2L, 1L, principals, "This is a new nomination");
+        Date now = new Date();
+
+        Employee nominator = new Employee("Mario", "Galeno", 2L, "111", "Technical Analyst", "mgaleno@solstice.com", "url");
+        Employee nominee = new Employee("Kunal", "Shah", 1L, "111", "Technical Analyst", "kshah@solstice.com", "url");
+
+        when(employeeClient.getEmployeeById(1L)).thenReturn(nominee);
+        when(employeeClient.getEmployeeById(2L)).thenReturn(nominator);
+
+        Nomination nomination = new Nomination(nominator, nominee, now, principals, "Description");
+
+        nominationService.createNomination(nomination);
 
         List<Nomination> fetchedNominations = nominationService.getAllNominationsForEmployee(1L);
 
-        if (fetchedNominations.isEmpty()) {
-            fail();
-        }
+        Nomination returnedNomination = fetchedNominations.get(0);
 
-        assertEquals(fetchedNominations.get(0).getDescription(), "This is a new nomination");
-    }
+        assertEquals((long) returnedNomination.getNominatedEmployee().getEmployeeNumber(), 1L);
+        assertEquals((long) returnedNomination.getNominatedByEmployee().getEmployeeNumber(), 2L);
+        assertEquals(returnedNomination.getDate(), now);
+        assertEquals(new ArrayList(returnedNomination.getPrincipals()), principals);
+        assertEquals(returnedNomination.getDescription(), "Description");
+    }   
 
     private List<NominationEntity> getMockNominations(){
         List<SolsticePrincipals> principals = Arrays.asList(SolsticePrincipals.CATCH_EXCELLENCE);

@@ -55,8 +55,8 @@ public class NominationService {
 
 
     // TODO Set these up into the controller, write tests for the controller, and then test the controller via url calls
-    public void createNomination(Long nominatorId, Long nomineeId, List<SolsticePrincipals> principals, String description){
-        NominationEntity nominationEntity = new NominationEntity(nominatorId,nomineeId, new Date(), principals, description);
+    public void createNomination(Nomination nomination){
+        NominationEntity nominationEntity = new NominationEntity(nomination);
         repository.save(nominationEntity);
     }
 
@@ -69,7 +69,7 @@ public class NominationService {
         return nominations;
     }
 
-    private Nomination convertEntityToNomination(NominationEntity entity){
+    protected Nomination convertEntityToNomination(NominationEntity entity){
         Employee nominee = employeeClient.getEmployeeById(entity.getNomineeId());
         Employee nominator = employeeClient.getEmployeeById(entity.getNominatorId());
         Collection<SolsticePrincipals> principals = entity.getPrincipals();

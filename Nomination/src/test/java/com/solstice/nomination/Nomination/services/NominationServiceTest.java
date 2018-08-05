@@ -97,7 +97,28 @@ public class NominationServiceTest {
         assertEquals(returnedNomination.getDate(), now);
         assertEquals(new ArrayList(returnedNomination.getPrincipals()), principals);
         assertEquals(returnedNomination.getDescription(), "Description");
-    }   
+    }
+
+    @Test
+    public void convertEntityToNominationTest(){
+        Employee nominator = new Employee("Mario", "Galeno", 2L, "111", "Technical Analyst", "mgaleno@solstice.com", "url");
+        Employee nominee = new Employee("Kunal", "Shah", 1L, "111", "Technical Analyst", "kshah@solstice.com", "url");
+        List<SolsticePrincipals> principals = Arrays.asList(SolsticePrincipals.CATCH_EXCELLENCE);
+        Date today = new Date();
+
+        NominationEntity entity = new NominationEntity(1L,2L,1L, today, principals,"Mario is the best employee1");
+
+        when(employeeClient.getEmployeeById(1L)).thenReturn(nominee);
+        when(employeeClient.getEmployeeById(2L)).thenReturn(nominator);
+
+        Nomination returnedNomination = nominationService.convertEntityToNomination(entity);
+
+        assertEquals((long)returnedNomination.getNominatedEmployee().getEmployeeNumber(),1L);
+        assertEquals((long)returnedNomination.getNominatedByEmployee().getEmployeeNumber(),2L);
+        assertEquals(returnedNomination.getDate(),today);
+        assertEquals(new ArrayList(returnedNomination.getPrincipals()), principals);
+        assertEquals(returnedNomination.getDescription(), "Mario is the best employee1");
+    }
 
     private List<NominationEntity> getMockNominations(){
         List<SolsticePrincipals> principals = Arrays.asList(SolsticePrincipals.CATCH_EXCELLENCE);

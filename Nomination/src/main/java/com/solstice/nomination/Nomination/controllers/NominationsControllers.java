@@ -43,15 +43,18 @@ public class NominationsControllers {
     @GetMapping("/weekOf")
     public List<Nomination> getNominationsForWeekOf(
             @RequestParam("dateOfWeek")
-            @DateTimeFormat(pattern="mm-dd-yyyy") Date dateOfWeek){
-        return null;
-        // return nominationService.getAllNominationForWeekOf(dateOfWeek);
-    }
+            @DateTimeFormat(pattern="MM/dd/yyyy") Date dateOfWeek){
+         List<Nomination> nominations = nominationService.getAllNominationForWeekOf(dateOfWeek);
+         if (nominations == null) {
+             return Arrays.asList();
+         }
+         return nominations;
+     }
 
     @PostMapping("/")
     public Nomination postNomination(
             @RequestBody Nomination newNomination ){
-        return null;
+        return nominationService.createNomination(newNomination);
 
     }
 

@@ -55,9 +55,9 @@ public class NominationService {
 
 
     // TODO Set these up into the controller, write tests for the controller, and then test the controller via url calls
-    public void createNomination(Nomination nomination){
+    public Nomination createNomination(Nomination nomination){
         NominationEntity nominationEntity = new NominationEntity(nomination);
-        repository.save(nominationEntity);
+        return convertEntityToNomination(repository.save(nominationEntity));
     }
 
     private List<Nomination> convertEntityListToNominationList(List<NominationEntity> nominationEntities){

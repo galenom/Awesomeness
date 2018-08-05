@@ -77,8 +77,4 @@ public class NominationService {
         String description = entity.getDescription();
         return new Nomination(nominator,nominee,date,(List)principals,description);
     }
-
-
-
-
 }

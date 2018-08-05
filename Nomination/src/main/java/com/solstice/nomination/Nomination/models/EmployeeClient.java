@@ -20,16 +20,15 @@ public class EmployeeClient {
     }
 
     public Employee getEmployeeById(Long id) {
-        Employee employee = restTemplate.getForObject(getEmployeeUrl(), Employee.class);
+        Employee employee = restTemplate.getForObject(getEmployeeUrl(id), Employee.class);
 
         return employee;
     }
 
-    // TODO ask justin how to test this
-    private String getEmployeeUrl() {
+    private String getEmployeeUrl(Long id) {
         InstanceInfo instance = employeeClient.getNextServerFromEureka("EMPLOYEESERVICE", false);
 
-        String url = instance.getHomePageUrl() + "/api/employees/1";
+        String url = instance.getHomePageUrl() + "/api/employees/" + id;
 
         return url;
     }
